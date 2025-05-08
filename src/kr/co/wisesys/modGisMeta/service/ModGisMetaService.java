@@ -33,6 +33,8 @@ public class ModGisMetaService {
 		if(val.equals("0")) {
 			dataList = dao.selectTop(val);
 			
+			log.info("dataList : " + dataList);
+			
 			List<Map<String, Object>> groupList = dataList.stream().map(data -> {
 	            Map<String, Object> group = new HashMap<>();
 	            group.put("siCode", data.get("sicode"));  
