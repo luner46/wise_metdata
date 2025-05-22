@@ -4,47 +4,348 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="modGisMeta">
 
-  <select id="selectTop" parameterType="int" resultType="hashmap">
-    <choose>
+<!-- 상위 선택 (시도, 대권역, 권역) -->
+<select id="selectTop" parameterType="int" resultType="hashmap">
+  <choose>
 
-      <!-- 행정구역 -->
-      <when test="val == 0">
-        SELECT 
-          a.si_code AS siCode, 
-          a.si_nm AS siNm,
-          b.gugun_code AS gugunCode, 
-          b.gugun_nm AS gugunNm
-        FROM flooddb.tn_si_code a
-        JOIN flooddb.tn_gugun_code b ON a.si_code = b.si_code
-      </when>
+    <!-- 행정구역 -->
+    <when test="val == 0">
+      SELECT 
+        a.si_code AS siCode, 
+        a.si_nm AS siNm,
+        b.gugun_code AS gugunCode, 
+        b.gugun_nm AS gugunNm
+      FROM 
+      	flooddb.tn_si_code a
+      JOIN 
+      	flooddb.tn_gugun_code b ON a.si_code = b.si_code
+      ORDER BY 
+      	b.gugun_nm COLLATE "C"
+    </when>
 
-      <!-- 유역 -->
-      <when test="val == 1">
-        SELECT 
-          a.bb_code AS bbCode, 
-          a.bb_nm AS bbNm,
-          b.mb_code AS mbCode, 
-          b.mb_nm AS mbNm
-        FROM flooddb.tn_bb_code a
-        JOIN flooddb.tn_mb_code b ON a.bb_code = b.bb_code
-      </when>
+    <!-- 유역 -->
+    <when test="val == 1">
+      SELECT 
+        a.bb_code AS bbCode, 
+        a.bb_nm AS bbNm,
+        b.mb_code AS mbCode, 
+        b.mb_nm AS mbNm
+      FROM 
+        flooddb.tn_bb_code a
+      JOIN 
+      	flooddb.tn_mb_code b ON a.bb_code = b.bb_code
+      ORDER BY 
+      	b.mb_nm COLLATE "C"
+    </when>
 
-      <!-- 하천 -->
-      <when test="val == 2">
-        SELECT 
-          a.dstrct_code AS dstrctCode, 
-          a.dstrct_nm AS dstrctNm,
-          b.wrssm_code AS wrssmCode, 
-          b.wrssm_nm AS wrssmNm
-        FROM flooddb.tn_dstrct_code a
-        JOIN flooddb.tn_wrssm_code b ON a.dstrct_code = b.dstrct_code
-      </when>
+    <!-- 하천 -->
+    <when test="val == 2">
+      SELECT 
+        a.dstrct_code AS dstrctCode, 
+        a.dstrct_nm AS dstrctNm,
+        b.wrssm_code AS wrssmCode, 
+        b.wrssm_nm AS wrssmNm
+      FROM 
+        flooddb.tn_dstrct_code a
+      JOIN 
+      	flooddb.tn_wrssm_code b ON a.dstrct_code = b.dstrct_code
+      ORDER BY 
+      	b.wrssm_nm COLLATE "C"
+    </when>
 
-      <otherwise>
-        SELECT NULL
-      </otherwise>
+    <otherwise>
+      SELECT NULL
+    </otherwise>
 
-    </choose>
-  </select>
+  </choose>
+</select>
+
+<!-- 하위 목록 조회 (읍면동, 표준유역, 하천 목록) -->
+<select id="selectDownList" parameterType="hashmap" resultType="hashmap">
+  <choose>
+
+    <!-- 행정구역: 읍면동 -->
+    <when test="type == 0">
+      SELECT 
+      	g.gugun_code AS gugunCode,
+		g.gugun_nm AS gugunNm,  
+        e.emd_code AS emdCode, 
+        e.emd_nm AS emdNm
+      FROM 
+        flooddb.tn_emd_code e
+      LEFT JOIN flooddb.tn_gugun_code g ON e.gugun_code = g.gugun_code
+      <if test="code != 0">
+        WHERE e.gugun_code = #{code}
+        ORDER BY e.emd_nm COLLATE "C"
+      </if>
+    </when>  
+
+    <!-- 유역: 표준유역 -->
+    <when test="type == 1">
+      SELECT 
+      	m.mb_code AS mbCode,
+		m.mb_nm AS mbNm,
+        s.sb_code AS sbCode,
+        s.sb_nm AS sbNm
+      FROM 
+        flooddb.tn_sb_code s
+      LEFT JOIN flooddb.tn_mb_code m ON s.mb_code = m.mb_code
+      <if test="code != 0">
+        WHERE s.mb_code = #{code}
+        ORDER BY s.sb_nm COLLATE "C"
+      </if>
+    </when>  
+
+    <!-- 하천: 하천 목록 -->
+    <when test="type == 2">
+      SELECT 
+        w.wrssm_code AS wrssmCode,
+		w.wrssm_nm AS wrssmNm,
+        r.river_code AS riverCode, 
+        r.river_nm AS riverNm
+      FROM 
+        flooddb.tn_river_code r
+      LEFT JOIN flooddb.tn_wrssm_code w ON r.wrssm_code = w.wrssm_code
+      <if test="code != 0">
+        WHERE r.wrssm_code = #{code}
+        ORDER BY r.river_nm COLLATE "C"
+      </if>
+    </when>
+
+    <otherwise>
+      SELECT NULL
+    </otherwise>
+
+  </choose>
+</select>
+
+<!-- 행정구역의 읍면동, 유역의 표준유역, 하천의 하천 셀렉트옵션에 따른 침수심 정보 데이터 -->
+<select id="selectFludInfoByEmdCode" parameterType="hashmap" resultType="hashmap">
+  <choose>
+
+    <!-- 행정구역 -->
+    <when test="type == 0">
+      SELECT 
+        si.si_code AS siCode,
+        si.si_nm AS siNm,
+        gu.gugun_code AS gugunCode,
+        gu.gugun_nm AS gugunNm,
+        emd.emd_code AS emdCode,
+        emd.emd_nm AS emdNm,
+        emd.la AS lat,
+        emd.lo AS lon,
+        flud.river_se AS riverSe,
+        flud.year_se AS yearSe,
+        TO_CHAR(CAST(flud.ty1 AS numeric) / 1000000.0, 'FM9999990.00') AS ty1_km2,
+        TO_CHAR(CAST(flud.ty2 AS numeric) / 1000000.0, 'FM9999990.00') AS ty2_km2,
+        TO_CHAR(CAST(flud.ty3 AS numeric) / 1000000.0, 'FM9999990.00') AS ty3_km2,
+        TO_CHAR(CAST(flud.ty4 AS numeric) / 1000000.0, 'FM9999990.00') AS ty4_km2,
+        TO_CHAR(CAST(flud.ty5 AS numeric) / 1000000.0, 'FM9999990.00') AS ty5_km2,
+        TO_CHAR(CAST(flud.sum AS numeric) / 1000000.0, 'FM9999990.00') AS sum_km2
+      FROM 
+        flooddb.TN_FLUD_AR_EMD flud
+      JOIN 
+        flooddb.tn_emd_code emd ON flud.emd_code = emd.emd_code
+      JOIN 
+        flooddb.tn_gugun_code gu ON emd.gugun_code = gu.gugun_code
+      JOIN 
+        flooddb.tn_si_code si ON gu.si_code = si.si_code
+      WHERE 
+        flud.emd_code = #{code}
+        AND flud.river_se = '3'
+        AND flud.year_se = '100'
+    </when>
+
+    <!-- 유역 -->
+    <when test="type == 1">
+      SELECT 
+        bb.bb_code AS bbCode,
+        bb.bb_nm AS bbNm,
+        mb.mb_code AS mbCode,
+        mb.mb_nm AS mbNm,
+        sb.sb_code AS sbCode,
+        sb.sb_nm AS sbNm,
+        sb.la AS lat,
+        sb.lo AS lon,
+        flud.river_se AS riverSe,
+        flud.year_se AS yearSe,
+        TO_CHAR(CAST(flud.ty1 AS numeric) / 1000000.0, 'FM9999990.00') AS ty1_km2,
+        TO_CHAR(CAST(flud.ty2 AS numeric) / 1000000.0, 'FM9999990.00') AS ty2_km2,
+        TO_CHAR(CAST(flud.ty3 AS numeric) / 1000000.0, 'FM9999990.00') AS ty3_km2,
+        TO_CHAR(CAST(flud.ty4 AS numeric) / 1000000.0, 'FM9999990.00') AS ty4_km2,
+        TO_CHAR(CAST(flud.ty5 AS numeric) / 1000000.0, 'FM9999990.00') AS ty5_km2,
+        TO_CHAR(CAST(flud.sum AS numeric) / 1000000.0, 'FM9999990.00') AS sum_km2
+      FROM 
+        flooddb.TN_FLUD_AR_SB flud
+      JOIN 
+        flooddb.tn_sb_code sb ON flud.sb_code = sb.sb_code
+      JOIN 
+        flooddb.tn_mb_code mb ON sb.mb_code = mb.mb_code
+      JOIN 
+        flooddb.tn_bb_code bb ON mb.bb_code = bb.bb_code
+      WHERE 
+        flud.sb_code = #{code}
+        AND flud.river_se = '3'
+        AND flud.year_se = '100'
+    </when>
+
+    <!-- 하천 -->
+    <when test="type == 2">
+      SELECT 
+        dt.dstrct_code AS dstrctCode,
+        dt.dstrct_nm AS dstrctNm,
+        ws.wrssm_code AS wrssmCode,
+        ws.wrssm_nm AS wrssmNm,
+        rv.river_code AS riverCode,
+        rv.river_nm AS riverNm,
+        rv.la AS lat,
+        rv.lo AS lon,
+        flud.river_se AS riverSe,
+        flud.year_se AS yearSe,
+        TO_CHAR(CAST(flud.ty1 AS numeric) / 1000000.0, 'FM9999990.00') AS ty1_km2,
+        TO_CHAR(CAST(flud.ty2 AS numeric) / 1000000.0, 'FM9999990.00') AS ty2_km2,
+        TO_CHAR(CAST(flud.ty3 AS numeric) / 1000000.0, 'FM9999990.00') AS ty3_km2,
+        TO_CHAR(CAST(flud.ty4 AS numeric) / 1000000.0, 'FM9999990.00') AS ty4_km2,
+        TO_CHAR(CAST(flud.ty5 AS numeric) / 1000000.0, 'FM9999990.00') AS ty5_km2,
+        TO_CHAR(CAST(flud.sum AS numeric) / 1000000.0, 'FM9999990.00') AS sum_km2
+      FROM 
+        flooddb.TN_FLUD_AR_RIVER flud
+      JOIN 
+        flooddb.tn_river_code rv ON flud.river_code = rv.river_code
+      JOIN 
+        flooddb.tn_wrssm_code ws ON rv.wrssm_code = ws.wrssm_code
+      JOIN 
+        flooddb.tn_dstrct_code dt ON ws.dstrct_code = dt.dstrct_code
+      WHERE 
+        flud.river_code = #{code}
+        AND flud.river_se = '2'
+        AND flud.year_se = '100'
+    </when>
+
+    <otherwise>
+      SELECT NULL
+    </otherwise>
+
+  </choose>
+</select>
+
+<!-- 행정구역, 유역, 하천 검색어 입력 조회 리스트 -->
+<select id="selectSearchList" parameterType="hashmap" resultType="hashmap">
+  <choose>
+
+    <!-- 행정구역 -->
+    <when test="type == 0">
+      SELECT 
+	      a.si_code AS siCode, 
+	      a.si_nm AS siNm,
+	      b.gugun_code AS gugunCode, 
+	      b.gugun_nm AS gugunNm,
+	      c.emd_code AS emdCode,
+	      c.emd_nm AS emdNm
+	  FROM 
+	  	  flooddb.tn_si_code a
+	  JOIN 
+	  	  flooddb.tn_gugun_code b ON a.si_code = b.si_code
+	  JOIN 
+	  	  flooddb.tn_emd_code c ON b.gugun_code = c.gugun_code
+	  <where>
+	  	<if test="val != null and val != ''">
+	  	  c.emd_nm LIKE CONCAT('%', #{val}, '%')
+	  	</if>
+	  </where>
+	  ORDER BY 
+		  b.gugun_nm COLLATE "C" 
+    </when>
+
+    <!-- 유역 -->
+    <when test="type == 1">
+      SELECT 
+	      a.bb_code AS bbCode,
+	      a.bb_nm AS bbNm,
+	      b.mb_code AS mbCode,
+	      b.mb_nm AS mbNm,
+	      c.sb_code AS sbCode,
+	      c.sb_nm AS sbNm
+	  FROM 
+	  	  flooddb.tn_bb_code a
+	  JOIN 
+	  	  flooddb.tn_mb_code b ON a.bb_code = b.bb_code
+	  JOIN 
+	      flooddb.tn_sb_code c ON b.mb_code = c.mb_code
+	  <where>
+	  	<if test="val != null and val != ''">
+	  	  c.sb_nm LIKE CONCAT('%', #{val}, '%')
+	  	</if>
+	  </where>
+	  ORDER BY 
+	      c.sb_nm COLLATE "C"
+    </when>
+
+    <!-- 하천 -->
+    <when test="type == 2">
+      SELECT 
+	      a.dstrct_code AS dstrctCode,
+	      a.dstrct_nm AS dstrctNm,
+	      b.wrssm_code AS wrssmCode,
+	      b.wrssm_nm AS wrssmNm,
+	      c.river_code AS riverCode,
+	      c.river_nm AS riverNm
+	  FROM 
+	      flooddb.tn_dstrct_code a
+	  JOIN 
+	  	  flooddb.tn_wrssm_code b ON a.dstrct_code = b.dstrct_code
+	  JOIN 
+	  	  flooddb.tn_river_code c ON b.wrssm_code = c.wrssm_code
+	  <where>
+	  	<if test="val != null and val != ''">
+	  	  c.river_nm LIKE CONCAT('%', #{val}, '%')
+	  	</if>
+	  </where>
+	  ORDER BY 
+	      c.river_nm COLLATE "C"
+    </when>
+
+    <otherwise>
+      SELECT NULL
+    </otherwise>
+
+  </choose>
+</select>
+
+<!-- 행정구역, 유역, 하천 셀렉트옵션에 따른 좌표이동 -->
+<select id="selectMoveCoordinate" parameterType="hashmap" resultType="hashmap">
+  <choose>
+    <when test="type == 0">
+      SELECT 
+      	  la AS lat, 
+      	  lo AS lon
+      FROM 
+      	  flooddb.tn_emd_code 
+      WHERE 
+          emd_code = #{code}
+    </when>
+    <when test="type == 1">
+      SELECT 
+      	  la AS lat, 
+      	  lo AS lon 
+      FROM 
+      	  flooddb.tn_sb_code 
+      WHERE 
+          sb_code = #{code}
+    </when>
+    <when test="type == 2">
+      SELECT 
+      	  la AS lat,
+      	  lo AS lon
+      FROM 
+          flooddb.tn_river_code 
+      WHERE 
+          river_code = #{code}
+    </when>
+    <otherwise>
+      SELECT NULL
+    </otherwise>
+  </choose>
+</select>
 
 </mapper>

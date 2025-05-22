@@ -4,4 +4,25 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="modRnCalendar">
 
+<select id="selectCalenderActiveDate" parameterType="map" resultType="map">
+    SELECT 
+        yyyymmdd,
+        rn_flag
+    FROM 
+    <choose>
+        <when test="agency == 0">
+            metdata.kma_rn_day
+        </when>
+        <otherwise>
+            metdata.me_rn_day
+        </otherwise>
+    </choose>
+    <where>
+        <if test="dt != null and dt != ''">
+            yyyymmdd LIKE CONCAT(#{dt}, '%')
+        </if>
+    </where>
+    ORDER BY yyyymmdd
+</select>
+
 </mapper>

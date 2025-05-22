@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ModStnRnDao{
 	
-	@Autowired
-	private SqlSessionTemplate sqlSessionFactoryPostgre;
+	//@Autowired
+	//private SqlSessionTemplate sqlSessionFactoryPostgre;
 	
 	private final Logger log = Logger.getLogger(getClass());
 	

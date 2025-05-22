@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
@@ -15,13 +14,22 @@
         <Logger name="org.egovframe" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
-		<!-- log SQL with timing information, post execution -->
-	    <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
-	        <AppenderRef ref="console" />
-	    </Logger>
-	    <Logger name="org.springframework" level="INFO" additivity="false">
-	        <AppenderRef ref="console" />
-	    </Logger>
+        <!-- log SQL with timing information, post execution -->
+        <Logger name="jdbc.sqltiming" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="jdbc.audit" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="jdbc.sqlonly" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="jdbc.resultset" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
         <Root level="INFO">
             <AppenderRef ref="console" />
         </Root>
