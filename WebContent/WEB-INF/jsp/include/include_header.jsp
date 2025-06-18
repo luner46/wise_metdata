@@ -22,15 +22,3 @@
 	<script type="text/javascript" src="/js/plugin/jquery/jquery.bxslider.min.js"></script>
 </head>
 <body>
-
-<div id="content-wrap">
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/modGisMeta/modGisMeta.do" title="GIS메타정보">GIS메타정보</a></li>
-                <li><a href="/modStnInfo/modStnInfo.do" title="GIS관측소제원">GIS관측소제원</a></li>
-                <li><a href="/modStnRn/modStnRn.do" title="GIS관측소강우">GIS관측소강우</a></li>
-                <li><a href="/modRnCalendar/modRnCalendar.do" title="강우캘린더">강우캘린더</a></li>
-            </ul>
-        </nav>
-    </header>

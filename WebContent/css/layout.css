@@ -60,7 +60,7 @@ html, body {width: 100%; height: 100%; margin: 0; padding: 0; font-family: "Noto
 
 
 /* header */
-#content-wrap header {position: fixed; top: 30px; left: 30px; width: 740px; height: 80px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-sizing: border-box; z-index: 10;}
+#content-wrap header {position: fixed; top: 30px; left: 30px; width: calc(100% - 60px); height: 80px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-sizing: border-box; z-index: 10;}
 #content-wrap header h1 {display: inline-block; vertical-align: middle; margin: 0 16px 0 16px;}
 #content-wrap header .title {display: inline-block; vertical-align: middle; font-size: 20px; color: #121212; font-weight: 600; line-height: 80px;}
 #content-wrap header nav {position: absolute; right: 16px;top: 16px;}
@@ -89,8 +89,8 @@ html, body {width: 100%; height: 100%; margin: 0; padding: 0; font-family: "Noto
 .time_con .con {float: left; width: calc(100% - 90px);}
 .time_con .con .item {flex-shrink: 1; width: 50px;}
 .calendar {flex-grow: 1; position: relative; border: 0; }
-.calendar .ui-datepicker-trigger {cursor: pointer; position: absolute; right: -70px; top: 7px; width: 16px;}
-.calendar .datepicker {cursor: pointer; width: 130px; background-color: #F6F6F6; border: 1px solid #eee; border-radius: 3px; height: 32px; line-height: 30px; box-sizing: border-box; text-indent: 12px;}
+.calendar .ui-datepicker-trigger {position: absolute; right: 12px; top: 6px; width: 16px;}
+.calendar .datepicker {cursor: pointer; width: 100%; background-color: #F6F6F6; border: 1px solid #eee; border-radius: 3px; height: 32px; line-height: 30px; box-sizing: border-box; text-indent: 12px;}
 .hourly {height: 32px; line-height: 30px; width: 100%; font-weight: 400; border: 1px solid #eee; border-radius: 3px; padding: 0 20px 0 8px; box-sizing: border-box; color: #121212; font-size: 15px; background: url(../images/img_select.png) calc(100% - 8px) 50% no-repeat #fff; -webkit-appearance: none; -moz-appearance: none;}
 .minute {height: 32px; line-height: 30px; width: 100%; font-weight: 400; border: 1px solid #eee; border-radius: 3px; padding: 0 20px 0 8px; box-sizing: border-box; color: #121212; font-size: 15px; background: url(../images/img_select.png) calc(100% - 8px) 50% no-repeat #fff; -webkit-appearance: none; -moz-appearance: none;}
 .now {width: 100%; height: 100%; background: #666; color: #fff; border-radius: 3px; font-size: 13px; font-weight: 300; letter-spacing: 0;}
@@ -215,34 +215,3 @@ html, body {width: 100%; height: 100%; margin: 0; padding: 0; font-family: "Noto
 
 form {width: 100%; height: 100%;}
 .map_wrap {width: 100%; height: 100%;}
-
-.srcharea a.lokup {
-    display: block;
-    margin-bottom: 0px;
-    padding: 5px 0;
-    border-radius: 3px;
-    background: #04325a 103px 8px no-repeat;
-    color: #fff;
-    font-weight: 500;
-    font-size: .86em;
-    font-size: .883rem;
-    letter-spacing: .1rem;
-    text-align: center;
-    text-decoration: none;
-    transition: .2s;
-    -webkit-box-shadow: 0 2px 3px rgba(0, 49, 96, .5);
-    -moz-box-shadow: 0 2px 3px rgba(0, 49, 96, .5);
-    box-shadow: 0 2px 3px rgba(0, 49, 96, .5);
-}
-
-.srcharea .input-group {
-  display: flex;
-  align-items: center;
-  gap: 8px; /* 간격 조정 */
-}
-
-.srcharea input[type="text"] {
-  height: 30px;
-  padding: 4px;
-  font-size: 14px;
-}

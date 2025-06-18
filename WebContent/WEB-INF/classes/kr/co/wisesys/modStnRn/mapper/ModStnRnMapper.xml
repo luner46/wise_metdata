@@ -3,5 +3,36 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="modStnRn">
-
+<select id="selectMeRn1hr" parameterType="map" resultType="map">
+SELECT          COALESCE(mrm.yyyymmddhh, #{issueDt}) as initDt, mrsi.rfobscd as rfobscd, mrsi.obsnm as obsnm, mrsi.agcnm as agcnm, mrsi.addr as addr, mrsi.etcaddr as etcaddr, mrsi.lat as lat, mrsi.lon as lon, COALESCE(mrm.rn_mm, 0) as rnmm, mrsi.flag as flag, msfi.flag_nm as flagNm
+FROM            wms.me_rn_stn_info mrsi
+JOIN            wms.me_stn_flag_info msfi 
+ON              mrsi.flag = msfi.flag
+LEFT JOIN (
+SELECT          yyyymmddhh, rfobscd, rn_mm
+FROM            metdata.me_rn_1hr
+WHERE           yyyymmddhh = #{issueDt}
+                ) mrm
+ON              TRIM(mrm.rfobscd COLLATE utf8mb3_unicode_ci) = TRIM(mrsi.rfobscd)
+WHERE           mrsi.init_dt = '20240101'
+<if test="endObsCheck">
+UNION ALL
+SELECT          COALESCE(mrm.yyyymmddhh, #{issueDt}) as initDt, mrsi.rfobscd as rfobscd, mrsi.obsnm as obsnm, mrsi.agcnm as agcnm, mrsi.addr as addr, mrsi.etcaddr as etcaddr, mrsi.lat as lat, mrsi.lon as lon, COALESCE(mrm.rn_mm, 0) as rnmm, mrsi.flag as flag, msfi.flag_nm as flagNm
+FROM            wms.me_rn_stn_info mrsi
+JOIN            wms.me_stn_flag_info msfi 
+ON              mrsi.flag = msfi.flag
+LEFT JOIN (
+SELECT          yyyymmddhh, rfobscd, rn_mm
+FROM            metdata.me_rn_1hr
+WHERE           yyyymmddhh = #{issueDt}
+                ) mrm
+ON              TRIM(mrm.rfobscd COLLATE utf8mb3_unicode_ci) = TRIM(mrsi.rfobscd)
+LEFT JOIN       wms.me_rn_stn_info sub_mrsi
+ON              sub_mrsi.rfobscd = mrsi.rfobscd
+AND             sub_mrsi.init_dt = '20240101'
+WHERE           mrsi.flag = '2'
+AND             sub_mrsi.rfobscd IS NULL
+</if>
+ORDER BY        CAST(flag AS DECIMAL) DESC, rfobscd ASC
+</select>
 </mapper>

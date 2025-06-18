@@ -3,5 +3,93 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="modStnInfo">
+<select id="selectMeRnStnInfo" parameterType="map" resultType="map">
+SELECT			stn_data.init_dt, stn_data.rfobscd, stn_data.obsnm, stn_data.agcnm, stn_data.addr, stn_data.etcaddr, stn_data.lat, stn_data.lon, stn_data.flag, stn_data.flag_nm
+FROM (
+SELECT 			mrsi.init_dt, mrsi.rfobscd, mrsi.obsnm, mrsi.agcnm, mrsi.addr, mrsi.etcaddr, mrsi.lat, mrsi.lon, mrsi.flag, msfi.flag_nm
+FROM			wms.me_rn_stn_info mrsi
+JOIN			wms.me_stn_flag_info msfi
+ON				mrsi.flag = msfi.flag
+WHERE			init_dt = #{issueDt}
+<if test="endObsCheck">
+UNION ALL
+SELECT			mrsi.init_dt, mrsi.rfobscd, mrsi.obsnm, mrsi.agcnm, mrsi.addr, mrsi.etcaddr, mrsi.lat, mrsi.lon, mrsi.flag, msfi.flag_nm
+FROM			wms.me_rn_stn_info mrsi
+JOIN			wms.me_stn_flag_info msfi
+ON				mrsi.flag = msfi.flag
+LEFT JOIN		wms.me_rn_stn_info sub_mrsi
+ON				mrsi.rfobscd = sub_mrsi.rfobscd 
+AND				sub_mrsi.init_dt = #{issueDt}
+WHERE			mrsi.flag = '2'
+AND				sub_mrsi.rfobscd IS NULL
+</if>
+				) AS stn_data
+ORDER BY		CAST(flag AS decimal) desc, rfobscd ASC
+</select>
 
+<select id="selectMeWlStnInfo" parameterType="map" resultType="map">
+SELECT			stn_data.init_dt, stn_data.wlobscd, stn_data.obsnm, stn_data.agcnm, stn_data.addr, stn_data.etcaddr, stn_data.lat, stn_data.lon, stn_data.gdt, stn_data.attwl, stn_data.wrnwl, stn_data.almwl, stn_data.srswl, stn_data.pfh, stn_data.fstnyn, stn_data.flag, stn_data.flag_nm
+FROM
+(SELECT			mwsi.init_dt, mwsi.wlobscd, mwsi.obsnm, mwsi.agcnm, mwsi.addr, mwsi.etcaddr, mwsi.lat, mwsi.lon, mwsi.gdt, mwsi.attwl, mwsi.wrnwl, mwsi.almwl, mwsi.srswl, mwsi.pfh, mwsi.fstnyn, mwsi.flag, msfi.flag_nm
+FROM			wms.me_wl_stn_info mwsi
+JOIN			wms.me_stn_flag_info msfi 
+ON				mwsi.flag = msfi.flag
+WHERE			mwsi.init_dt = #{issueDt}
+<if test="endObsCheck">
+UNION ALL
+SELECT			mwsi.init_dt, mwsi.wlobscd, mwsi.obsnm, mwsi.agcnm, mwsi.addr, mwsi.etcaddr, mwsi.lat, mwsi.lon, mwsi.gdt, mwsi.attwl, mwsi.wrnwl, mwsi.almwl, mwsi.srswl, mwsi.pfh, mwsi.fstnyn, mwsi.flag, msfi.flag_nm
+FROM			wms.me_wl_stn_info mwsi
+JOIN			wms.me_stn_flag_info msfi 
+ON				mwsi.flag = msfi.flag
+LEFT JOIN		wms.me_wl_stn_info sub_mwsi
+ON				mwsi.wlobscd = sub_mwsi.wlobscd 
+AND				sub_mwsi.init_dt = #{issueDt}
+WHERE			mwsi.flag = '2'
+AND				sub_mwsi.wlobscd IS NULL
+</if>
+				) AS stn_data
+ORDER BY		CAST(flag AS decimal) desc, wlobscd ASC
+</select>
+
+<select id="selectMeDamInfo" parameterType="map" resultType="map">
+SELECT			stn_data.init_dt, stn_data.dmobscd, stn_data.obsnm, stn_data.agcnm, stn_data.addr, stn_data.etcaddr, stn_data.lat, stn_data.lon, stn_data.fldlmtwl, stn_data.pfh, stn_data.flag, stn_data.flag_nm
+FROM 
+(SELECT			mdsi.init_dt, mdsi.dmobscd, mdsi.obsnm, mdsi.agcnm, mdsi.addr, mdsi.etcaddr, mdsi.lat, mdsi.lon, mdsi.fldlmtwl, mdsi.pfh, mdsi.flag, msfi.flag_nm
+FROM			wms.me_dam_stn_info mdsi
+JOIN			wms.me_stn_flag_info msfi
+ON				mdsi.flag = msfi.flag
+WHERE			init_dt = #{issueDt}
+<if test="endObsCheck">
+UNION ALL
+SELECT			mdsi.init_dt, mdsi.dmobscd, mdsi.obsnm, mdsi.agcnm, mdsi.addr, mdsi.etcaddr, mdsi.lat, mdsi.lon, mdsi.fldlmtwl, mdsi.pfh, mdsi.flag, msfi.flag_nm
+FROM			wms.me_dam_stn_info mdsi
+JOIN			wms.me_stn_flag_info msfi
+ON				mdsi.flag = msfi.flag
+LEFT JOIN		wms.me_dam_stn_info sub_mdsi
+ON				mdsi.dmobscd = sub_mdsi.dmobscd 
+AND				sub_mdsi.init_dt = #{issueDt}
+WHERE			mdsi.flag = '2'
+AND				sub_mdsi.dmobscd IS NULL
+</if>
+				) AS stn_data
+ORDER BY		CAST(flag AS decimal) desc, dmobscd ASC
+</select>
+
+<select id="selectKmaAwsStnInfo" parameterType="map" resultType="map">
+SELECT			kasi.stn_id, kasi.stn_nm, kasi.lat, kasi.lon, trim(kasi.ht) as ht, kasi.yyyymm, kasi.flag, msfi.flag_nm
+FROM			wms.kma_aws_stn_info kasi
+JOIN			wms.me_stn_flag_info msfi
+ON				(kasi.flag COLLATE utf8mb3_unicode_ci) = msfi.flag
+WHERE			kasi.yyyymm = #{issueDt}
+ORDER BY		cast(stn_id as decimal) asc
+</select>
+
+<select id="selectKmaAsosStnInfo" parameterType="map" resultType="map">
+SELECT			kasi.stn_id, kasi.stn_nm, kasi.lat, kasi.lon, trim(kasi.ht) as ht, kasi.yyyymm, kasi.flag, msfi.flag_nm
+FROM			wms.kma_asos_stn_info kasi
+JOIN			wms.me_stn_flag_info msfi
+ON				(kasi.flag COLLATE utf8mb3_unicode_ci) = msfi.flag
+WHERE			kasi.yyyymm = #{issueDt}
+ORDER BY		cast(stn_id as decimal) asc
+</select>
 </mapper>
