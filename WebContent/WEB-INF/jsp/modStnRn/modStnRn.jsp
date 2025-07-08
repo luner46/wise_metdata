@@ -407,7 +407,7 @@ header .changeMod {cursor: pointer; padding: 5px 10px; color: #000000; border-ra
 .legend_wrap .legend li:nth-child(8) span {background-color: #9200e4;}
 .legend_wrap .legend li:nth-child(9) span {background-color: #ad07ff;}
 .legend_wrap .legend li:nth-child(10) span {background-color: #c23eff;}
-.legend_wrap .legend li:nth-child(11) span {background-color: #c23eff;}
+.legend_wrap .legend li:nth-child(11) span {background-color: #e0a9ff;}
 .legend_wrap .legend li:nth-child(12) span {background-color: #000390;}
 .legend_wrap .legend li:nth-child(13) span {background-color: #1f219d;}
 .legend_wrap .legend li:nth-child(14) span {background-color: #4c4eb1;}
