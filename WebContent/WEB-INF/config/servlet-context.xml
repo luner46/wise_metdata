@@ -28,6 +28,17 @@
     </mvc:interceptors>
 	-->
 	
+	<!--  interceptor 빈 생성 --> 
+	<beans:bean id="interceptor" class="kr.co.wisesys.common.util.Interceptor"/> 
+	
+	<!-- Intercpetor 등록/설정 -->
+	  <mvc:interceptors>
+			<mvc:interceptor>
+			<mvc:mapping path="/modFloodQc/**" />
+			<beans:ref bean="interceptor"/>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
     <mvc:annotation-driven />
     <context:component-scan base-package="kr.co.wisesys"/>
     

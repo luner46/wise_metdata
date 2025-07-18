@@ -2,4 +2,9 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<entry key="geoserverPath">http://geo1.wisesys.co.kr</entry>
+	<entry key="host">211.209.185.141</entry>
+	<entry key="port">7021</entry>
+	<entry key="user">wisesys</entry>
+	<entry key="password">d2#zR*DaBp</entry>
+	<entry key="ipWhiteList">192.168.,0:0:0:0:0:0:0:1</entry>
 </properties>
