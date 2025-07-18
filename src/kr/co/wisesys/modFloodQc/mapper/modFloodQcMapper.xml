@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modFloodQc">
+<!-- 코드 유효성 여부를 각 테이블에서 조건에 따라 COUNT로 조회 - type: 코드 타입 (SAREA, SBSN, SGG, ALL) - code or freq 값을 기준으로 조건 검색 -->
+<select id="checkShpCodeValid" parameterType="map" resultType="int">
+    <choose>
+        <when test="type == 'SAREA'">
+            SELECT COUNT(*) FROM flooddb.eh_sarea_info
+            WHERE sarea_cd = #{code}
+        </when>
+        <when test="type == 'SBSN'">
+            SELECT COUNT(*) FROM flooddb.tn_mb_code
+            WHERE mb_code = #{code}
+        </when>
+        <when test="type == 'SGG'">
+            SELECT COUNT(*) FROM flooddb.tn_gugun_code
+            WHERE gugun_code = #{code}
+        </when>
+        <when test="type == 'ALL'">
+            SELECT COUNT(*) FROM flooddb.fldlv_info
+			WHERE fldlv_freq = #{freq}
+        </when>
+        <otherwise>
+            SELECT 0
+        </otherwise>
+    </choose>
+</select>
+
+<!-- 모니터링 상태 목록 조회, group_no가 null일 경우 MAX(group_no) 기준 조회  -->
+<select id="selectMonitorStatus" parameterType="map" resultType="map">
+SELECT 
+    data_id as data_id,
+    complete_yn AS complete_yn,
+    status_msg AS status_msg,
+    progress || '%' AS progress,
+    TO_CHAR(start_time, 'YYYY-MM-DD HH24:MI:SS') AS start_time,
+    TO_CHAR(last_updated, 'YYYY-MM-DD HH24:MI:SS') AS last_updated
+FROM 
+    flooddb.monitor_proc_status
+WHERE 
+    group_no = 
+    <choose>
+        <when test="group_no != null">
+            #{group_no}
+        </when>
+        <otherwise>
+            (SELECT MAX(group_no) FROM flooddb.monitor_proc_status)
+        </otherwise>
+    </choose>
+ORDER BY data_id ASC
+</select>
+
+<!-- 모니터링 상태 등록, 검수 시작 시 각 data_id별 상태 초기화 -->
+<insert id="insertMonitorStatus" parameterType="map">
+    INSERT INTO flooddb.monitor_proc_status (
+        data_id, complete_yn, status_msg, progress, start_time, last_updated, elapsed_sec, group_no 
+    ) VALUES (
+        #{data_id}, #{complete_yn}, #{status_msg}, #{progress}, now(), now(), #{elapsed_sec}, #{group_no}
+    )
+</insert>
+
+<!-- 현재 등록된 최대 group_no 조회, 값이 없을 경우 0 반환 -->
+<select id="selectMaxGroupNo" resultType="int">
+  SELECT COALESCE(MAX(group_no), 0) FROM flooddb.monitor_proc_status
+</select>
+
+ <!-- 모니터링 상태 갱신 (진행률 및 완료 여부 등), elapsed_sec은 시작부터 현재까지의 초 단위 경과시간 -->
+<update id="updateMonitorComplete" parameterType="map">
+    UPDATE flooddb.monitor_proc_status
+    SET complete_yn = #{complete_yn},
+        status_msg = #{status_msg},
+        progress = #{progress},
+        last_updated = now(),
+        elapsed_sec = EXTRACT(EPOCH FROM (now() - start_time))
+    WHERE group_no = #{group_no}
+      AND data_id = #{data_id}
+</update>
+
+<!-- 특정 group_no에 해당하는 data_id 목록 조회 -->
+<select id="selectDataIdsByGroupNo" resultType="String" parameterType="int">
+    SELECT 
+    	data_id as data_id
+    FROM 
+    	flooddb.monitor_proc_status
+    WHERE 
+    	group_no = #{group_no}
+</select>
+
+</mapper>

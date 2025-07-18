@@ -89,8 +89,8 @@ html, body {width: 100%; height: 100%; margin: 0; padding: 0; font-family: "Noto
 .time_con .con {float: left; width: calc(100% - 90px);}
 .time_con .con .item {flex-shrink: 1; width: 50px;}
 .calendar {flex-grow: 1; position: relative; border: 0; }
-.calendar .ui-datepicker-trigger {position: absolute; right: 12px; top: 6px; width: 16px;}
-.calendar .datepicker {cursor: pointer; width: 100%; background-color: #F6F6F6; border: 1px solid #eee; border-radius: 3px; height: 32px; line-height: 30px; box-sizing: border-box; text-indent: 12px;}
+.calendar .ui-datepicker-trigger {cursor: pointer; position: absolute; right: -70px; top: 7px; width: 16px;}
+.calendar .datepicker {cursor: pointer; width: 130px; background-color: #F6F6F6; border: 1px solid #eee; border-radius: 3px; height: 32px; line-height: 30px; box-sizing: border-box; text-indent: 12px;}
 .hourly {height: 32px; line-height: 30px; width: 100%; font-weight: 400; border: 1px solid #eee; border-radius: 3px; padding: 0 20px 0 8px; box-sizing: border-box; color: #121212; font-size: 15px; background: url(../images/img_select.png) calc(100% - 8px) 50% no-repeat #fff; -webkit-appearance: none; -moz-appearance: none;}
 .minute {height: 32px; line-height: 30px; width: 100%; font-weight: 400; border: 1px solid #eee; border-radius: 3px; padding: 0 20px 0 8px; box-sizing: border-box; color: #121212; font-size: 15px; background: url(../images/img_select.png) calc(100% - 8px) 50% no-repeat #fff; -webkit-appearance: none; -moz-appearance: none;}
 .now {width: 100%; height: 100%; background: #666; color: #fff; border-radius: 3px; font-size: 13px; font-weight: 300; letter-spacing: 0;}
