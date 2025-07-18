@@ -320,7 +320,7 @@ function setMarkerStyleAsVal(val, obsNm){
 			return new ol.style.Style({
 				image: new ol.style.Circle({
 					radius: 7,
-					fill: new ol.style.Fill({color: '#c23eff'}),
+					fill: new ol.style.Fill({color: '#e0a9ff'}),
 					stroke: new ol.style.Stroke({color: '#000000', width: 2})
 				}),
 				text: setMarkerStyleText(obsNm)

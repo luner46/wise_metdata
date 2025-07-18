@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="modLdReg">
+<select id="selectModLdRegInfo" parameterType="map" resultType="map">
+SELECT			pnu AS pnu, jibun AS jibun, bchk AS bchk, sgg_oid AS sggOid, col_adm_se AS colAdmSe, ST_AsGeoJSON(ST_Transform(geom, 3857)) AS geom
+FROM			public.lsmd_cont_ldreg_ansung
+WHERE			ST_Contains(geom, ST_Transform(ST_SetSRID(ST_MakePoint(cast(#{xAxis} as decimal), cast(#{yAxis} as decimal)), 3857), 5186))
+</select>
+
+<select id="selectAllJibunInfo" parameterType="map" resultType="map">
+SELECT			pnu AS pnu, jibun AS jibun, bchk AS bchk, sgg_oid AS sggOid, col_adm_se AS colAdmSe, ST_AsGeoJSON(ST_Transform(geom, 3857)) AS geom
+FROM			public.lsmd_cont_ldreg_ansung
+WHERE			ST_Intersects(geom, ST_Transform(ST_GeomFromText(#{polygon}, 3857), 5186))
+</select>
+</mapper>
