@@ -124,7 +124,6 @@ function toggleParentCheckState(childCheckbox) {
 
 // 면적 역전 검수 트리 체크
 function areaReversedCheck(dataList) {
-	console.log(dataList);
     $.ajax({
         url: "/modFloodQc/checkShpCodeValid.do",
         method: "POST",
