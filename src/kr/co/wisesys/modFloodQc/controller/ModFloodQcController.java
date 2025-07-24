@@ -197,6 +197,12 @@ public class ModFloodQcController {
 	    return result;
 	}
 	
+	/**
+	 * 면적 역전 검수 중지 요청
+	 *
+	 * @param param 중지할 group_no를 포함한 요청 파라미터
+	 * @return 중지 요청 결과 응답 (성공 여부 및 메시지)
+	 */
 	@PostMapping("/stopAreaReverseCheck.do")
 	@ResponseBody
 	public Map<String, Object> stopAreaReverseCheck(@RequestBody Map<String, Object> param) {
@@ -204,11 +210,21 @@ public class ModFloodQcController {
 	    try {
 	        int groupNo = Integer.parseInt(param.get("group_no").toString());
 	        service.requestStop(groupNo);
+
 	        result.put("success", true);
 	        result.put("message", "중지 요청 완료");
+	    } catch (NumberFormatException e) {
+	        result.put("success", false);
+	        result.put("message", "group_no는 숫자여야 합니다.");
+	    } catch (IllegalArgumentException e) {
+	        result.put("success", false);
+	        result.put("message", "입력 오류: " + e.getMessage());
+	    } catch (DataAccessException e) {
+	        result.put("success", false);
+	        result.put("message", "DB 처리 중 오류: " + e.getMessage());
 	    } catch (Exception e) {
 	        result.put("success", false);
-	        result.put("message", "중지 요청 실패: " + e.getMessage());
+	        result.put("message", "알 수 없는 서버 오류: " + e.getMessage());
 	    }
 	    return result;
 	}

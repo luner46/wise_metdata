@@ -164,8 +164,10 @@ public class ModFloodQcService {
     }
     
 	/**
-     * 최신 group_no 조회
-     */
+	 * 검수 상태 기준으로 가장 큰 group_no 값을 반환
+	 *
+	 * @return 최신 group_no 값, 오류 시 -1 반환
+	 */
     public int maxGroupNo() {
         try {
             return dao.selectMaxGroupNo();
@@ -221,10 +223,22 @@ public class ModFloodQcService {
         }
     }
     
+    /**
+     * 주어진 groupNo에 대한 검수 중지 요청 플래그 설정
+     *
+     * @param groupNo 중지 요청할 group 번호
+     */
     public void requestStop(int groupNo) {
         stopSignalMap.put(groupNo, true);
     }
     
+    /**
+     * 셸 스크립트를 통해 검수 프로세스를 제어 (start 또는 stop)
+     *
+     * @param groupNo 대상 그룹 번호
+     * @param action 실행할 작업 (예: "start" 또는 "stop")
+     * @throws RuntimeException 셸스크립트 실행 중 오류 발생 시
+     */
     public void controlStatus(int groupNo, String action) {
         String cmd = "/bin/sh /data1/_wisesys_utils/test_monitoring_status/select_system_status.sh " + groupNo + " " + action;
 
@@ -246,7 +260,6 @@ public class ModFloodQcService {
             reader = new BufferedReader(new InputStreamReader(channel.getInputStream(), "EUC-KR"));
             channel.connect();
 
-            // 셸스크립트 실행 출력 로그 보기
             String line;
             while ((line = reader.readLine()) != null) {
                 //log.info("[Shell Output] " + line);
