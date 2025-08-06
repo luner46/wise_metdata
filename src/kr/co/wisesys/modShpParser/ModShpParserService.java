@@ -217,6 +217,14 @@ public class ModShpParserService {
         return stringWriter.toString();
     }
     
+    /**
+	 * SHP 파일 > KML 변환 SERVICE
+	 * 
+	 * @author 최준규
+	 * @since 2025.08.06
+	 * @param MultipartFile inputFile
+	 */
+    
     public String convertToKml(MultipartFile inputFile) throws IOException, FactoryException, TransformException, ParserConfigurationException, TransformerException {
     	File tempDir = null;
         DataStore dataStore = null;

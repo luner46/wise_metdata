@@ -16,6 +16,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * <pre>
+ * @ClassName   : ModShpParserController.java
+ * @Description : SHP 파일 변환 모듈 Controller
+ * -----------------------------------------------------
+ * 2025.08.06, 최준규, 최초 생성
+ *
+ * </pre>
+ * @author 최준규
+ * @since 2025.08.06
+ * @version 1.0
+ * @see reference
+ *
+ * @Copyright (c) 2025 by wiseplus All right reserved.
+ */
+
 @Controller
 @RequestMapping(value={"/modShpParser/*"})
 public class ModShpParserController {
@@ -23,7 +39,15 @@ public class ModShpParserController {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    ModShpParserService service;
+    private ModShpParserService service;
+    
+    /**
+	 * SHP 파일 변환 페이지
+	 * 
+	 * @author 최준규
+	 * @since 2025.08.06
+	 * @return shp 파일 변환 페이지 main view
+	 */
     
     @RequestMapping(value="/modShpParser.do")
     public String modShpToKml () {
@@ -37,28 +61,22 @@ public class ModShpParserController {
 			return "../../error/error";
 		}
     }
-    
-    @RequestMapping(value="/modDisplayLayer.do")
-	public String testLayer() {
-		try {
-			return "modShpParser/modDisplayLayer";
-		} catch (IllegalArgumentException e) {
-			log.error(e.toString());
-			return "../../error/error";
-		} catch (NullPointerException e) {
-			log.error(e.toString());
-			return "../../error/error";
-		}
-	}
 
+	/**
+	 * SHP > GeoJSON 변환 CONTROLLER
+	 * 
+	 * @author 최준규
+	 * @since 2025.08.06
+	 * @param MultipartFile file
+	 * @return String resultGeoJSON
+	 */
+	
     @RequestMapping(value="/modShpToGeoJson.do")
     @ResponseBody
     public String modShpToGeoJson(@RequestParam MultipartFile file) throws IOException, FactoryException, TransformException {
-    	log.info("GeoJSON Convert Start");
     	String resultGeoJSON = "";
     	try {
     		resultGeoJSON = service.convertToGeoJson(file);
-            log.info("GeoJSON Convert Success");
         } catch (IllegalArgumentException e) {
 			log.error(e.toString());
 		} catch (NullPointerException e) {
@@ -67,14 +85,21 @@ public class ModShpParserController {
     	return resultGeoJSON;
     }
     
+    /**
+	 * SHP > KML 변환 CONTROLLER
+	 * 
+	 * @author 최준규
+	 * @since 2025.08.06
+	 * @param MultipartFile file
+	 * @return String resultKML
+	 */
+    
     @RequestMapping(value = "/modShpToKml.do")
     @ResponseBody
     public String modShpToKml(@RequestParam MultipartFile file) throws IOException, FactoryException, TransformException, ParserConfigurationException, TransformerException {
-    	log.info("KML Convert Start");
     	String resultKML = "";
     	try {
     		resultKML = service.convertToKml(file);
-            log.info("KML Convert Success");
         } catch (IllegalArgumentException e) {
 			log.error(e.toString());
 		} catch (NullPointerException e) {
