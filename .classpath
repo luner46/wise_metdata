@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
-		<attributes>
-			<attribute name="module" value="true"/>
-			<attribute name="owner.project.facets" value="java"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/activation-1.1.jar"/>
@@ -161,5 +156,33 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/unoil-2.3.0.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xml-apis-1.4.01.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ejml-core-0.41.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-api-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-epsg-hsql-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-geojson-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-main-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-metadata-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-referencing-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-shapefile-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jts-core-1.19.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/re2j-1.6.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/indriya-2.1.3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/systems-common-2.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/unit-api-2.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/si-units-2.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/uom-lib-common-2.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/si-quantity-2.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ejml-ddense-0.41.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/hsqldb-2.7.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/json-20240303.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-xsd-kml-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-xml-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-xsd-core-30.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.eclipse.xsd-2.12.0.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/picocontainer-1.3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.eclipse.emf.common-2.8.0-v20120911-0500.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.eclipse.emf.ecore.xmi-2.8.0.v20120606.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.eclipse.emf.ecore-2.8.0.v20120606.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/gt-xsd-sld-30.0.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>
