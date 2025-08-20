@@ -904,6 +904,8 @@ $(function() {
 		view: view
    	});
 	
+	checkVworldHealth();
+	
 	selectData(0);
 	selectTop(0);
 	selectDownList(11680);
