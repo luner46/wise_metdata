@@ -5,7 +5,8 @@
 	
 	<!-- flooddb -->
 	<entry key="jdbc.postgre.dbDriverClass">net.sf.log4jdbc.DriverSpy</entry>
-	<entry key="jdbc.postgre.dbUrl">jdbc:log4jdbc:postgresql://211.209.185.143:5432/flooddb?useUnicode=true&amp;characterEncoding=utf-8</entry>
+	<!--  <entry key="jdbc.postgre.dbUrl">jdbc:log4jdbc:postgresql://211.209.185.143:5432/flooddb?useUnicode=true&amp;characterEncoding=utf-8</entry> -->
+	<entry key="jdbc.postgre.dbUrl">jdbc:log4jdbc:postgresql://211.209.185.143:5432,211.209.185.144:5432/flooddb?targetServerType=master&amp;loadBalanceHosts=false&amp;hostRecheckSeconds=5&amp;connectTimeout=3&amp;socketTimeout=5&amp;useUnicode=true&amp;characterEncoding=utf-8</entry>
 	<entry key="jdbc.postgre.dbUser">flooddb_dev</entry>
 	<entry key="jdbc.postgre.dbPwd">z&amp;5YiUh!Qv</entry>
 	
